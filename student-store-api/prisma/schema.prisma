@@ -17,7 +17,7 @@ datasource db {
 model Product {
   id              Int      @id @default(autoincrement())
   name            String
-  price           Float
+  price           Decimal
   description     String
   image_url       String
   category        String
@@ -26,27 +26,27 @@ model Product {
 
 
 model Order {
-  id              Int      @id @default(autoincrement())
-  customer        String
-  total           Float
+  order_id        Int      @id @default(autoincrement())
+  customer_id     Int
+  total_price     Decimal
   status          String
-  createdAt       DateTime @default(now())
-  items           OrderItem[]
+  created_at      DateTime @default(now())
+  order_items     OrderItem[]
 }
 
 
 
 model OrderItem {
-  id              Int      @id @default(autoincrement())
-  orderId         Int
-  productId       Int
+  order_item_id   Int      @id @default(autoincrement())
+  order_id        Int
+  product_id      Int
   quantity        Int
-  price           Float
+  price           Decimal
 
 
 //relations
-  Order           Order    @relation(fields: [orderId], references: [id])
-  Product         Product  @relation(fields: [productId], references: [id])
+  Order           Order    @relation(fields: [order_id], references: [order_id ], onDelete: Cascade)
+  Product         Product  @relation(fields: [product_id], references: [id], onDelete: Cascade)
 }
 
 
