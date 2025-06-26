@@ -1,10 +1,16 @@
 .ProductCard {
   height: 330px;
   width: 250px;
-  background: var(--pure-white);
+  background: #FFEFE2;
   display: flex;
   flex-direction: column;
   border: solid 1px var(--border-color);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.711); 
+  
+}
+.ProductCard:hover {
+ transform: scale(1.1); 
+  box-shadow: 0 8px 16px rgb(0, 0, 0); 
 }
 .ProductCard .media {
   height: 250px;
@@ -13,6 +19,7 @@
 .ProductCard .media img {
   height: 250px;
   width: 248px;
+  object-fit:contain;
 }
 .ProductCard .product-info {
   flex: 1;

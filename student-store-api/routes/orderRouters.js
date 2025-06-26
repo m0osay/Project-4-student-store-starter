@@ -6,6 +6,7 @@ const controller = require("../controllers/orderController");
 
 router.get("/", controller.getAll);
 router.get("/:id", controller.getById);
+router.get("/customer/:customer_id", controller.getByCustomer);
 router.post("/", controller.create);
 router.put("/:id", controller.update);
 router.delete("/:id", controller.remove);

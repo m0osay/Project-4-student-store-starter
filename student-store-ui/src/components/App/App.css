@@ -16,4 +16,10 @@
   flex-direction: column;
   overflow-x: hidden;
   padding-left: 60px;
+    background: linear-gradient(
+    135deg,
+  #F8EBDB 20%,
+   #F7E3D1 40%,
+    #FEE1CF 100%
+  );
 }

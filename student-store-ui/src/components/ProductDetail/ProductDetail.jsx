@@ -17,7 +17,37 @@ function ProductDetail({ addToCart, removeFromCart, getQuantityOfItemInCart }) {
     return <NotFound />;
   }
 
+ //helper function for api fetch
+  async function fetchProductsWithID(productId){
+    try{
+    const res = await axios.get("http://localhost:3001/product/2")
+    
+    const data = res.data          // how we get the array
+    return data
+    }catch(err){
+      console.log("Api error", err)
+      throw err
+    }
+  }
+
+  useEffect(() => { 
+    const fetchData = async () => {
+      const data = await fetchProductsWithID(productId);
+      console.log("[ProductDetail]", data )
+      setProduct(data)
+
+
+    }
+
+
+    
+ fetchData()
+}, [productId]) 
+
   if (isFetching || !product) {
+    // console.log("boolena for product", product)
+    //  console.log("boolena for fethcing", isFetching)
+    //  console.log("[ProductDetail], productID ", productId)
     return <h1>Loading...</h1>;
   }
 

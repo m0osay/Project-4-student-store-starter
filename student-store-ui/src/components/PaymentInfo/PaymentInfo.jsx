@@ -9,7 +9,7 @@ export default function PaymentInfo({ userInfo, setUserInfo, handleOnCheckout, i
           <i className="material-icons md-48">monetization_on</i>
         </span>
       </h3>
-      <div className="input-field">
+      {/* <div className="input-field">
         <label className="label">Student ID</label>
         <div className="control ">
           <input
@@ -20,8 +20,8 @@ export default function PaymentInfo({ userInfo, setUserInfo, handleOnCheckout, i
             onChange={(e) => setUserInfo((u) => ({ ...u, name: e.target.value }))}
           />
         </div>
-      </div>
-
+      </div> */}
+{/* 
       <div className="input-field">
         <label className="label">Dorm Room Number</label>
         <div className="control">
@@ -33,9 +33,9 @@ export default function PaymentInfo({ userInfo, setUserInfo, handleOnCheckout, i
             onChange={(e) => setUserInfo((u) => ({ ...u, email: e.target.value }))}
           />
         </div>
-      </div>
+      </div> */}
 
-      {/* <div className="field">
+      <div className="field">
         <div className="control">
           <label className="checkbox">
             <input
@@ -48,7 +48,7 @@ export default function PaymentInfo({ userInfo, setUserInfo, handleOnCheckout, i
             </span>
           </label>
         </div>
-      </div> */}
+      </div>
 
       <p className="is-danger">{error}</p>
 

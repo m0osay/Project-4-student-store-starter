@@ -48,26 +48,26 @@ async function seed() {
       });
     }
 
-    // Seed orders and items
-    for (const order of ordersData.orders) {
-      const createdOrder = await prisma.order.create({
-        data: {
-          customer_id: order.customer_id,
-          total_price: order.total_price,
-          status: order.status,
-          created_at: new Date(order.created_at),
-          order_items: {
-            create: order.items.map((item) => ({
-              product_id: item.product_id,
-              quantity: item.quantity,
-              price: item.price,
-            })),
-          },
-        },
-      });
+    // // Seed orders and items
+    // for (const order of ordersData.orders) {
+    //   const createdOrder = await prisma.order.create({
+    //     data: {
+    //       customer_id: order.customer_id,
+    //       total_price: order.total_price,
+    //       status: order.status,
+    //       created_at: new Date(order.created_at),
+    //       order_items: {
+    //         create: order.items.map((item) => ({
+    //           product_id: item.product_id,
+    //           quantity: item.quantity,
+    //           price: item.price,
+    //         })),
+    //       },
+    //     },
+    //   });
 
-      console.log(`✅ Created order #${createdOrder.id}`);
-    }
+    //   console.log(`✅ Created order #${createdOrder.id}`);
+    // }
 
     console.log("\n🎉 Seeding complete!");
   } catch (err) {

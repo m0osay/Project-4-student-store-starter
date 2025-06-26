@@ -19,7 +19,26 @@ exports.getAll = async (req, res) => {
 //Get a specifc order by id
 exports.getById = async (req, res) => {
   const order_id = Number(req.params.id);
-  let order = await prisma.order.findUnique({ where: { order_id } });
+  const order = await prisma.order.findUnique({
+    where: { order_id },
+    include: {
+      order_items: {
+        include: {
+          Product: true,
+        },
+      },
+    },
+  });
+  if (!order) {
+    return res.status(404).json({ error: "Not found" });
+  }
+  res.json(order);
+};
+
+//Get a specifc order by id
+exports.getByCustomer = async (req, res) => {
+  const customer_id = Number(req.params.customer_id);
+  let order = await prisma.order.findMany({ where: { customer_id } });
   order = await prisma.order.findMany({
     include: {
       order_items: {
@@ -40,11 +59,15 @@ exports.getById = async (req, res) => {
 //Post a order
 exports.create = async (req, res) => {
   const { customer_id, total_price, status, created_at } = req.body; //our input
-  const neworder = await prisma.order.create({
-    //syntax for creating newProdcut
-    data: { customer_id, total_price, status, created_at },
+  const newOrder = await prisma.order.create({
+    data: { customer_id, total_price, status }
   });
-  res.status(201).json(neworder); //successfual entry
+ res.status(201).json({
+  message: "order created",
+  order_id: newOrder.order_id,
+  order: newOrder
+});
+
 };
 
 //Update a order
@@ -71,15 +94,31 @@ exports.remove = async (req, res) => {
       return res.status(404).json({ error: "Order not found" });
   }
 };
-
-//Custom endpoints for adding an item to an existing order
 exports.createItems = async (req, res) => {
   const createOrderItems = await prisma.orderItem.createMany({
-    //takes ur array and creates OrderItems
     data: req.body,
   });
 
-  res.json(createOrderItems);
+  // Get order_id from the first item in the array
+  const order_id = req.body[0]?.order_id;
+
+  // Fetch the updated order object (with items and products)
+  let order = null;
+  if (order_id) {
+    order = await prisma.order.findUnique({
+      where: { order_id },
+      include: {
+        order_items: {
+          include: { Product: true },
+        },
+      },
+    });
+  }
+
+  res.json({
+    order_id,
+    order,
+  });
 };
 
 exports.getTotalPrice = async (req, res) => {
@@ -103,7 +142,7 @@ exports.getTotalPrice = async (req, res) => {
   const updatedOrder = await prisma.order.update({
     where: { order_id },
     data: { total_price: total },
-    select: {total_price: true}//select tells which one to retrun
+    select: { total_price: true }, //select tells which one to retrun
   });
   res.json(order);
 };
