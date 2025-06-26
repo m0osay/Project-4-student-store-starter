@@ -1,15 +1,12 @@
-
-
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const fs = require("fs");
 const path = require("path");
 
-
 async function seed() {
   try {
     console.log("🌱 Seeding database...\n");
-  
+
     /*
     Why I added the code belo: 
      -> Because the auto-increment IDs are never recycled, so deleting rows leaves holes.
@@ -17,23 +14,17 @@ async function seed() {
     -> One possible solution is to  reset the sequence when you wipe data
 
     */
-await prisma.$transaction([
-//   // Step 1, we  delete rows
-//   prisma.orderItem.deleteMany(),
-//   prisma.order.deleteMany(),
-//   prisma.product.deleteMany(),
+    await prisma.$transaction([
+      // Step 1, we  delete rows
+      prisma.orderItem.deleteMany(),
+      prisma.order.deleteMany(),
+      prisma.product.deleteMany(),
 
-//   // Step 2, reset the sequences so the next insert starts at 1 again
-//   prisma.$executeRaw`ALTER SEQUENCE "Product_id_seq"            RESTART WITH 1`,
-//   prisma.$executeRaw`ALTER SEQUENCE "Order_order_id_seq"        RESTART WITH 1`,
-//   prisma.$executeRaw`ALTER SEQUENCE "OrderItem_order_item_id_seq" RESTART WITH 1`
-// ])
-
-
-    // Clear existing data (in order due to relations)
-    await prisma.orderItem.deleteMany();
-    await prisma.order.deleteMany();
-    await prisma.product.deleteMany();
+      // Step 2, reset the sequences so the next insert starts at 1 again
+      prisma.$executeRaw`ALTER SEQUENCE "Product_id_seq"            RESTART WITH 1`,
+      prisma.$executeRaw`ALTER SEQUENCE "Order_order_id_seq"        RESTART WITH 1`,
+      prisma.$executeRaw`ALTER SEQUENCE "OrderItem_order_item_id_seq" RESTART WITH 1`,
+    ]);
 
     // Load JSON data
     const productsData = JSON.parse(
@@ -59,23 +50,21 @@ await prisma.$transaction([
 
     // Seed orders and items
     for (const order of ordersData.orders) {
- 
-        const createdOrder = await prisma.order.create({
-          data: {
-            customer_id: order.customer_id,
-            total_price: order.total_price,
-            status: order.status,
-            created_at: new Date(order.created_at),
-            order_items: {
-              create: order.items.map((item) => ({
-                product_id: item.product_id,
-                quantity: item.quantity,
-                price: item.price,
-              })),
-            },
+      const createdOrder = await prisma.order.create({
+        data: {
+          customer_id: order.customer_id,
+          total_price: order.total_price,
+          status: order.status,
+          created_at: new Date(order.created_at),
+          order_items: {
+            create: order.items.map((item) => ({
+              product_id: item.product_id,
+              quantity: item.quantity,
+              price: item.price,
+            })),
           },
-        });
-
+        },
+      });
 
       console.log(`✅ Created order #${createdOrder.id}`);
     }

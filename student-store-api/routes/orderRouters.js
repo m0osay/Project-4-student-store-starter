@@ -11,6 +11,7 @@ router.put("/:id", controller.update);
 router.delete("/:id", controller.remove);
 
 //custom endpoint
-// router.post("/:order_id/items")
+router.post("/:order_id/items", controller.createItems)
+router.get("/:order_id/total", controller.getTotalPrice)
 
 module.exports = router;

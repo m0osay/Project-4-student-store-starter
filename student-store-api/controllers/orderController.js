@@ -37,15 +37,6 @@ exports.getById = async (req, res) => {
   res.json(order);
 };
 
-// model Order {
-//   id              Int      @id @default(autoincrement())
-//   customer        String
-//   total           Float
-//   status          String
-//   createdAt       DateTime @default(now())
-//   items           OrderItem[]
-// }
-
 //Post a order
 exports.create = async (req, res) => {
   const { customer_id, total_price, status, created_at } = req.body; //our input
@@ -70,9 +61,7 @@ exports.update = async (req, res) => {
 };
 
 //Remove an orderItem
-// controllers/orderController.js
-// controllers/orderController.js
-exports.remove = async (req, res, next) => {
+exports.remove = async (req, res) => {
   try {
     const order_id = Number(req.params.id); // <- use id
     await prisma.order.delete({ where: { order_id } });
@@ -80,6 +69,41 @@ exports.remove = async (req, res, next) => {
   } catch (err) {
     if (err.code === "P2025")
       return res.status(404).json({ error: "Order not found" });
-    next(err);
   }
+};
+
+//Custom endpoints for adding an item to an existing order
+exports.createItems = async (req, res) => {
+  const createOrderItems = await prisma.orderItem.createMany({
+    //takes ur array and creates OrderItems
+    data: req.body,
+  });
+
+  res.json(createOrderItems);
+};
+
+exports.getTotalPrice = async (req, res) => {
+  let total = 0;
+
+  const order_id = Number(req.params.order_id);
+  const order = await prisma.order.findUnique({
+    where: { order_id },
+    include: { order_items: true },
+  }); // get the order obejct
+
+  if (!order) {
+    return res.status(404).json({ error: "Order not found" });
+  }
+  const orderItems = order.order_items;
+
+  for (let i = 0; i < orderItems.length; i++) {
+    total += Number(orderItems[i].price);
+  }
+
+  const updatedOrder = await prisma.order.update({
+    where: { order_id },
+    data: { total_price: total },
+    select: {total_price: true}//select tells which one to retrun
+  });
+  res.json(order);
 };
