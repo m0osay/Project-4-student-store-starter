@@ -38,22 +38,18 @@ exports.getById = async (req, res) => {
 //Get a specifc order by id
 exports.getByCustomer = async (req, res) => {
   const customer_id = Number(req.params.customer_id);
-  let order = await prisma.order.findMany({ where: { customer_id } });
-  order = await prisma.order.findMany({
+  const orders = await prisma.order.findMany({
+    where: { customer_id },
     include: {
       order_items: {
-        // pull the array Order -> OrderItem
-        include: {
-          Product: true, // for every OrderItem,we also  also pull Product
-        },
+        include: { Product: true },
       },
     },
   });
-  if (!order) {
-    //if order with that specific id doesnt exist
+  if (!orders || orders.length === 0) {
     return res.status(404).json({ error: "Not found" });
   }
-  res.json(order);
+  res.json(orders);
 };
 
 //Post a order
