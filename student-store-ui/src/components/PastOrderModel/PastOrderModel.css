@@ -16,9 +16,9 @@
   width: 80vh;
   height: 90vh;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   overflow-y: auto;
-
+  align-items: center;
   background: #fff;
   border-radius: 1.25rem;
   padding: 2rem 2.5rem;
@@ -80,6 +80,10 @@
 /* ————— Placeholder color ————— */
 .pom-input::placeholder {
   color: #8a8a8a;
+}
+
+.grid{
+    margin: auto;
 }
 
 /* ————— Focus state ————— */

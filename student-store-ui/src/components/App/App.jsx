@@ -34,7 +34,8 @@ function App() {
   const [showPastOrder, setShowPastOrder] = useState(false); //false at beginning
   const [showProfilePage, setShowProfilePage] = useState(false);
   const [profile, setProfile] = useState({});
-   const [showSignInPage, setShowSignInPage] = useState(true);
+  const [showSignInPage, setShowSignInPage] = useState(true);
+  const [customerIdFilter, setCustomerIdFilter] = useState("");
 
   // Toggles sidebar
   const toggleSidebar = () => setSidebarOpen((isOpen) => !isOpen);
@@ -54,32 +55,26 @@ function App() {
     console.log("I clicked submit");
     console.log("what I added to cart", cart);
 
-    const orderId = await makeNewOrder(0)
+    const orderId = await makeNewOrder(0);
     console.log("Try here", orderId);
-    await addOrderItems(orderId) // adds all our orders from our cart to our order
+    await addOrderItems(orderId); // adds all our orders from our cart to our order
     const order = await fetchOrder(orderId);
     const total_price = order.total_price * 0.0875;
-    await updateOrderTotal(orderId,total_price);
+    await updateOrderTotal(orderId, total_price);
     setCart([]);
-    
-
-
-    
-
   };
 
-async function updateOrderTotal(orderId, total) {
-  try {
-    const res = await axios.put(
-      `http://localhost:3001/order/${orderId}`,
-      { total_price: total }
-    );
-    return res.data;
-  } catch (err) {
-    console.log("Api error", err);
-    throw err;
+  async function updateOrderTotal(orderId, total) {
+    try {
+      const res = await axios.put(`http://localhost:3001/order/${orderId}`, {
+        total_price: total,
+      });
+      return res.data;
+    } catch (err) {
+      console.log("Api error", err);
+      throw err;
+    }
   }
-}
   //helper function for api fetch for getting the product
   async function fetchProducts() {
     try {
@@ -92,13 +87,9 @@ async function updateOrderTotal(orderId, total) {
     }
   }
 
-
-
-
-
   //helper function for api fetch for getting the order object
   async function fetchOrder(order_id) {
-    console.log("Lets see", order_id)
+    console.log("Lets see", order_id);
     try {
       const res = await axios.get(`http://localhost:3001/order/${order_id}`);
       const data = res.data; // how we get the array
@@ -109,30 +100,29 @@ async function updateOrderTotal(orderId, total) {
     }
   }
 
-  //makes a new Order in the backend
-async function makeNewOrder(total) {
-  try {
-    const order = {
-      customer_id: profile.name,
-      total_price: total,
-      status: "Done",
-      orderItem: [],
-    };
 
-    // Send to backend and get the created order back
-    const response = await axios.post(
-      `http://localhost:3001/order/`,
-      order
-    );
-    // Return the order_id from the backend response
-    console.log("WOKR PLEASE", response.data)
-    console.log("WOKR PLEASE", response.data.orderId)
-    return response.data.order_id // <-- This is what your backend sends
-  } catch (err) {
-    console.log("Api error", err);
-    throw err;
+
+  //makes a new Order in the backend
+  async function makeNewOrder(total) {
+    try {
+      const order = {
+        customer_id: profile.name,
+        total_price: total,
+        status: "Done",
+        orderItem: [],
+      };
+
+      // Send to backend and get the created order back
+      const response = await axios.post(`http://localhost:3001/order/`, order);
+      // Return the order_id from the backend response
+      console.log("WOKR PLEASE", response.data);
+      console.log("WOKR PLEASE", response.data.orderId);
+      return response.data.order_id; // <-- This is what your backend sends
+    } catch (err) {
+      console.log("Api error", err);
+      throw err;
+    }
   }
-}
 
   //helper function for api fetch for adding orders
   async function addOrderItems(orderId) {
@@ -218,13 +208,14 @@ async function makeNewOrder(total) {
   }
   return (
     <div className="App">
-      
-      {showSignInPage && <AccountManager
-        onClose={() => setShowProfilePage(false)}
-        profile={profile}
-        setProfile={setProfile}
-        setShowSignInPage = {setShowSignInPage}
-      /> }
+      {showSignInPage && (
+        <AccountManager
+          onClose={() => setShowProfilePage(false)}
+          profile={profile}
+          setProfile={setProfile}
+          setShowSignInPage={setShowSignInPage}
+        />
+      )}
 
       {showProfilePage && (
         <ProfileModal order={order} onClose={() => setShowProfilePage(false)} />

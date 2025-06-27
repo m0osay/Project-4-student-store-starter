@@ -45,9 +45,7 @@ function ProductDetail({ addToCart, removeFromCart, getQuantityOfItemInCart }) {
 }, [productId]) 
 
   if (isFetching || !product) {
-    // console.log("boolena for product", product)
-    //  console.log("boolena for fethcing", isFetching)
-    //  console.log("[ProductDetail], productID ", productId)
+
     return <h1>Loading...</h1>;
   }
 

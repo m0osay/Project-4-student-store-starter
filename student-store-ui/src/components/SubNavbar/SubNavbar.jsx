@@ -40,8 +40,8 @@ function SubNavbar({
       <div className="content">
         <div className="row">
           <div className="buttons">
-            <button onClick={() => handleProfileUser()}> Profile</button>
-            <button onClick={() => handleClickPastOrder(true)}>
+            <button className = "profile"  onClick={() => handleProfileUser()}> Profile</button>
+            <button className = "past-order" onClick={() => handleClickPastOrder(true)}>
               View past orders
             </button>
           </div>

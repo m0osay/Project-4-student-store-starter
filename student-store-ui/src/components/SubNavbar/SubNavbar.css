@@ -5,6 +5,30 @@
   flex-direction: column;
   padding: 0 var(--side-padding);
 }
+.profile,
+.past-order {
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-right: 0.5rem;
+}
+.profile {
+  background-color: #007bff;
+  color: #fff;
+}
+.profile:hover {
+  background-color: #0056b3;
+}
+.past-order {
+  background-color: #6c757d;
+  color: #fff;
+}
+.past-order:hover {
+  background-color: #5a6268;
+}
 .SubNavbar .content {
   max-width: var(--content-width);
   width: 100%;
